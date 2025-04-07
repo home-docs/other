@@ -1,26 +1,3 @@
-<#
-.SYNOPSIS
-Removes a WSL virtual machine (distribution) with user-provided name and **explicit data deletion warning**.
-
-.DESCRIPTION
-This script lists all installed WSL distributions (using raw 'wsl --list --verbose' output)
-and prompts the user to enter the name of the distribution to remove.
-It then uses the 'wsl --unregister' command to delete the specified WSL VM.
-
-**WARNING: REMOVING A WSL DISTRIBUTION IS A PERMANENT AND DESTRUCTIVE ACTION.**
-**ALL DATA WITHIN THE SELECTED VM WILL BE IRRECOVERABLY DELETED.**
-
-Please ensure you have backed up any important data before proceeding.
-
-.NOTES
-- Requires Windows 10 or later with WSL installed.
-- Must be run in PowerShell.
-- **Data Loss Warning:**  Removing a WSL distribution is **PERMANENT**. All data within the VM will be **COMPLETELY DELETED** by the `wsl --unregister` command.
-- **User Input:** This version relies on the user to manually enter the name of the VM to remove, copied from the displayed list.
-#>
-
-# --- Script Configuration ---
-$WSLDistributionNames = @()
 $WSLVerboseOutputLines = @()
 
 # --- Get and Display Raw WSL Distribution List ---

@@ -8,20 +8,23 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 }
 
 Write-Host "Checking if WSL optional features are enabled..." -ForegroundColor Green
+Write-Host ""
 $VMPlatformFeature = Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform
 $WSLFeature = Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
 
 if (-not $VMPlatformFeature.State -or $VMPlatformFeature.State -ne "Enabled") {
     Write-Host "Virtual Machine Platform feature is not enabled. Enabling..." -ForegroundColor Yellow
     Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -NoRestart
-} else {
+}
+else {
     Write-Host "Virtual Machine Platform feature is already enabled." -ForegroundColor Gray
 }
 
 if (-not $WSLFeature.State -or $WSLFeature.State -ne "Enabled") {
     Write-Host "Windows Subsystem for Linux feature is not enabled. Enabling..." -ForegroundColor Yellow
     Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -NoRestart
-} else {
+}
+else {
     Write-Host "Windows Subsystem for Linux feature is already enabled." -ForegroundColor Gray
 }
 
@@ -38,6 +41,14 @@ if (!(Get-Command wsl -ErrorAction SilentlyContinue)) {
 else {
     Write-Host "WSL is already installed. Continuing..." -ForegroundColor Green
 }
+
+Write-Host ""
+Write-Host "Listing any installed WSL VM's" -ForegroundColor Green
+Write-Host "Please ensure you use a unique name for your VM" -ForegroundColor Green
+Write-Host "If this list is empty, no WSL VM's are installed" -ForegroundColor DarkGray
+Write-Host "***************************************************************" -ForegroundColor Green
+wsl --list --verbose
+Write-Host "***************************************************************" -ForegroundColor Green
 
 Write-Host ""
 Write-Host "Fetching available distributions from the online list..." -ForegroundColor Cyan
@@ -72,8 +83,8 @@ for ($i = 0; $i -lt $distroOptions.Count; $i++) {
 }
 
 Write-Host ""
-Write-Host "Enter the name of the OS you want to install (Press Ctrl+C to exit): " -ForegroundColor Yellow
-
+Write-Host "Enter the name of the OS you want to install (Press Ctrl+C to exit): " -ForegroundColor Yellow -BackgroundColor DarkBlue -NoNewline
+Write-Host ""
 $selectedOS = Read-Host
 
 Write-Host ""
@@ -88,15 +99,10 @@ if ([string]::IsNullOrEmpty($vmName)) {
     $vmName = $default_name
 }
 
-if (!(wsl --list --verbose | Select-String "$vmName")) {
-    Write-Host ""
-    Write-Host "Creating WSL2 VM with distribution: " -ForegroundColor Yellow -NoNewline
-    Write-Host $selectedOS -ForegroundColor Green -NoNewline
-    Write-Host " and name: " -ForegroundColor Yellow -NoNewline
-    Write-Host $vmName -ForegroundColor Green
-    Write-Host ""
-    wsl --install --distribution "$selectedOS" --name "$vmName"
-} else {
-    Write-Host "WSL2 VM '$vmName' is already installed." -ForegroundColor Gray
-}
-
+Write-Host ""
+Write-Host "Creating WSL2 VM with distribution: " -ForegroundColor Yellow -NoNewline
+Write-Host $selectedOS -ForegroundColor Green -NoNewline
+Write-Host " and name: " -ForegroundColor Yellow -NoNewline
+Write-Host $vmName -ForegroundColor Green
+Write-Host ""
+wsl --install --distribution "$selectedOS" --name "$vmName"
